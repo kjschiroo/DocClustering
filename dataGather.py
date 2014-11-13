@@ -9,7 +9,7 @@ from wikitools import category
 RAW_DATA_DIR = "./raw/"
 gGatheredArticleTitles = {}
 
-selectedCategories = ['Arts', 'History', 'Science', 'Biography']
+selectedCategories = ['Arts', 'History', 'Science', 'Biography', 'Sports']
 
 def getPageAndWriteJSON(page, fileName):
     dataToSave = {}
