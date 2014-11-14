@@ -9,7 +9,7 @@ from wikitools import category
 RAW_DATA_DIR = "./raw/"
 gGatheredArticleTitles = {}
 
-selectedCategories = ['Arts', 'History', 'Science', 'Biography', 'Sports']
+selectedCategories = ['Arts', 'Aesthetics', 'Performing arts', 'History', 'Theories of History', 'Science', 'Philosophy of science', 'Science education', 'Biography','Autobiographies', 'Biographical novels', 'Sports', 'Sports trophies and awards']
 
 def getPageAndWriteJSON(page, fileName):
     dataToSave = {}
@@ -26,7 +26,7 @@ def tryToSavePageWithTitle(title, fileName):
         return False
     try:
         page = wikipedia.WikipediaPage(title)
-        if len(page.content.split()) > 500:
+        if len(page.content.split()) > 250:
             getPageAndWriteJSON(page, fileName)
             gGatheredArticleTitles[title] = fileName
             return True
@@ -59,17 +59,21 @@ def gatherEntries():
     if not os.path.exists(RAW_DATA_DIR):
         os.makedirs(RAW_DATA_DIR)
 
-    site = wiki.Wiki("http://en.wikipedia.org/w/api.php")
-    i = 0
-    for theCategory in selectedCategories:
-        cat  = category.Category(site, theCategory)
-        for article in cat.getAllMembersGen(namespaces=[0]):
-            print article.title
-            fileName = "Article" + str(i).zfill(4) + ".json"
-            if tryToSavePageWithTitle(article.title, fileName):
-                i += 1
-            sleep(20)
-            if i % 500 == 0:
-                break
+    with open (RAW_DATA_DIR + "DATA_GUIDE.txt", 'w') as f:
+        f.write("Categories Searched:\n")
+        site = wiki.Wiki("http://en.wikipedia.org/w/api.php")
+        i = 0
+        for theCategory in selectedCategories:
+            f.write("   " + theCategory + ": " + str(i) + "-")
+            cat  = category.Category(site, theCategory)
+            for article in cat.getAllMembersGen(namespaces=[0]):
+                print article.title
+                fileName = "Article" + str(i).zfill(4) + ".json"
+                if tryToSavePageWithTitle(article.title, fileName):
+                    i += 1
+                sleep(30)
+                if i % 500 == 0:
+                    break
+            f.write(str(i))
 
 gatherEntries()
