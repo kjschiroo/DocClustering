@@ -74,6 +74,6 @@ def gatherEntries():
                 sleep(30)
                 if i % 500 == 0:
                     break
-            f.write(str(i))
+            f.write(str(i-1) + "\n")
 
 gatherEntries()
