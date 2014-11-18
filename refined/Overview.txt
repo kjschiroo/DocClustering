@@ -1,0 +1,21 @@
+Category Count Breakdown
+    Category      Under 500      Over 500
+    Arts: 34    31
+    Aesthetics: 42    81
+    Biographical novels: 45    23
+    Science: 8    9
+    Performing arts: 39    67
+    Autobiographies: 74    23
+    Wars involving the states and peoples of Africa: 6    61
+    Wars involving the United Kingdom: 36    103
+    Science education: 72    50
+    Sports trophies and awards: 63    29
+    Theories of history: 23    144
+    Wars involving the Soviet Union: 3    24
+    Philosophy of science: 69    137
+    Sports: 2    2
+    Biography: 5    10
+    History: 9    21
+    No Category: 9    18
+
+Total articles: 1337
