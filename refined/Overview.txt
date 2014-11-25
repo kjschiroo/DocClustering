@@ -5,14 +5,14 @@ Category Count Breakdown
     Biographical novels: 45    23
     Science: 8    9
     Performing arts: 39    67
-    Autobiographies: 74    23
+    Autobiographies: 75    22
     Wars involving the states and peoples of Africa: 6    61
     Wars involving the United Kingdom: 36    103
-    Science education: 72    50
+    Science education: 74    48
     Sports trophies and awards: 63    29
     Theories of history: 23    144
     Wars involving the Soviet Union: 3    24
-    Philosophy of science: 69    137
+    Philosophy of science: 70    136
     Sports: 2    2
     Biography: 5    10
     History: 9    21

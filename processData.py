@@ -39,8 +39,9 @@ def processGatheredArticles():
                     article = {}
                     article['title'] = d['title']
                     article['categories'] = categoriesList(d['categories'])
-                    article['countVector'] = vectorizeContent(d['content'])
-                    article['wordCount'] = len(d['content'].split())
+                    content = stripSpecialChars(d['content']).lower()
+                    article['countVector'] = vectorizeContent(content)
+                    article['wordCount'] = len(content.split())
                     dataset.append(article)
 
     dataBundle = {}
@@ -75,6 +76,10 @@ def processGatheredArticles():
 
     with open(PROCESS_DATA_DIR + "README.txt", 'w') as f:
         f.write(dbExplained)
+
+def stripSpecialChars(content):
+    # Check that it is ascii and alpha-numeric or whitespace
+    return "".join(c for c in content if ord(c) < 128 and (c.isalnum() or c.isspace()))
 
 def vectorizeContent(content):
     contentVector = {}
