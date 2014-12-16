@@ -38,7 +38,9 @@ def evalGroup(g):
             catCount[c] += 1
     total = len(g)
     output = ""
-    for c in catCount:
+    cats = catCount.keys()
+    cats.sort()
+    for c in cats:
         output += str(c) + ":" + str(catCount[c]/float(total)) + " "
     output = output.strip()
     return output
@@ -54,37 +56,55 @@ for v in dataset:
     fDataset.append(toFreqVec(v))
 
 centroids = []
-numCategories = 6
+numCategories = 16
 for i in range(numCategories):
     centroids.append(dict(random.choice(fDataset)))
 
 r = 1
 groups = {}
-while True:
-    print "Round " + str(r)
-    for i in range(numCategories):
-        groups[i] = []
+outputs = {}
+for i in range(numCategories):
+    outputs[i] = ""
 
-    i = 0
-    for v in fDataset:
-#print str(i) + "/" + str(len(fDataset))
-        close = findClosest(v,centroids)
-        groups[close].append(v)
-        i += 1
+with open("kmeans.out", 'w') as f:
+    stop = False
+    while not stop:
+        print "Round " + str(r)
+        f.write("Round " + str(r) + "\n")
+        for i in range(numCategories):
+            groups[i] = []
+    
+        i = 0
+        for v in fDataset:
+    #print str(i) + "/" + str(len(fDataset))
+            close = findClosest(v,centroids)
+            groups[close].append(v)
+            i += 1
+    
+        stop = True
+        for i in range(len(groups)):
+            output = evalGroup(groups[i])
+            if output != outputs[i]:
+                stop = False
+                print "*",
 
-    for i in range(len(groups)):
-        output = evalGroup(groups[i])
-        print "Group " + str(i) + ": " + output
-        temp = {}
-        for v in groups[i]:
-            for k in v:
-                if k == 'categories':
-                    continue
-                if not k in temp:
-                    temp[k] = 0
+            outputs[i] = output
+            print "Group " + str(i) + ": " + output
+            f.write("Group " + str(i) + ": " + output + "\n")
+            temp = {}
+            for v in groups[i]:
+                for k in v:
+                    if k == 'categories':
+                        continue
+                    if not k in temp:
+                        temp[k] = 0
+    
+                    temp[k] += v[k]
+            centroids[i] = {}
+            for k in temp:
+                centroids[i][k] = temp[k]/len(groups[i])
+        r += 1
 
-                temp[k] += v[k]
-        centroids[i] = {}
-        for k in temp:
-            centroids[i][k] = temp[k]/len(groups[i])
-    r += 1
+with open("kmeans.json", 'w') as f:
+    results = {'centroids':centroids, 'groups':groups, 'outputs':outputs}
+    f.write(json.dumps(results))
