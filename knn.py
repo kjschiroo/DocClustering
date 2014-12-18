@@ -3,7 +3,7 @@ import random
 
 high = 500
 low = 3
-K = 9
+K = 20
 
 def toFreqVec(v):
     f = {}
@@ -54,6 +54,20 @@ def classify(v, trainingSet):
 
     return cls
 
+def printConfusion(m):
+    output = ""
+    output += "".ljust(7)
+    for key2 in m.keys():
+        output += str(key2).rjust(7)
+    print output
+
+    for key1 in m.keys():
+        output = str(key1).rjust(7)
+        for key2 in m.keys():
+            boxCount = int(m[key1][key2]*100)/100.0
+            output += str(boxCount).rjust(7)
+        print output
+
 with open("refined/dataBundle.json", 'r') as f:
     dataBundle = json.load(f)
 
@@ -72,8 +86,9 @@ for key1 in allCategories.values():
         confusionMatrix[key1][key2] = 0
 
 random.shuffle(fDataset)
-train = fDataset[0:len(fDataset)/2]
-test = fDataset[len(fDataset)/2:len(fDataset)-1]
+mark = len(fDataset)*9/10
+train = fDataset[0:mark]
+test = fDataset[mark:len(fDataset)-1]
 
 p = 0
 for v in test:
@@ -87,17 +102,21 @@ for v in test:
                 confusionMatrix[ca][cl] = 0
             confusionMatrix[ca][cl] += 1/float(len(v['categories'])*len(cls))
     p += 1
+    if p % 5 == 0:
+        printConfusion(confusionMatrix)
+
 with open("knn.out", 'w') as f:
     output = ""
-    output += "".ljust(5)
+    output += "".ljust(7)
     for key2 in allCategories.values():
-        output += str(key2).rjust(5)
+        output += str(key2).rjust(7)
     f.write(output + '\n')
     print output
 
     for key1 in allCategories.values():
-        output = str(key1).rjust(5)
+        output = str(key1).rjust(7)
         for key2 in allCategories.values():
-            output += str(confusionMatrix[key1][key2]).rjust(5)
+            boxCount = int(confusionMatrix[key1][key2]*100)/100.0
+            output += str(boxCount).rjust(7)
         f.write(output + '\n')
         print output
