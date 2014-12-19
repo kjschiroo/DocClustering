@@ -42,9 +42,10 @@ def classify(v, trainingSet):
     counts = {}
     for t in buddies:
         for c in t['categories']:
-            if not c in counts:
-                counts[c] = 0
-            counts[c] += 1
+            cMod = c/10
+            if not cMod in counts:
+                counts[cMod] = 0
+            counts[cMod] += 1
 
     highest = max(counts.values())
     cls = []
@@ -57,8 +58,8 @@ def classify(v, trainingSet):
 def printConfusion(m):
     output = ""
     output += "".ljust(7)
-    for key2 in m.keys():
-        output += str(key2).rjust(7)
+    for key in m.keys():
+        output += str(key).rjust(7)
     print output
 
     for key1 in m.keys():
@@ -81,12 +82,15 @@ for v in dataset:
 
 confusionMatrix = {}
 for key1 in allCategories.values():
-    confusionMatrix[key1] = {}
+    key1Mod = key1/10
+    confusionMatrix[key1Mod] = {}
     for key2 in allCategories.values():
-        confusionMatrix[key1][key2] = 0
+        key2Mod = key2/10
+        confusionMatrix[key1Mod][key2Mod] = 0
 
 random.shuffle(fDataset)
 mark = len(fDataset)*9/10
+mark = len(fDataset)*5/10
 train = fDataset[0:mark]
 test = fDataset[mark:len(fDataset)-1]
 
@@ -95,17 +99,18 @@ for v in test:
     print str(p) + "/" + str(len(test))
     cls = classify(v, train)
     for ca in v['categories']:
-        if not ca in confusionMatrix:
-            confusionMatrix[ca] = {}
+        caMod = ca/10
+        if not caMod in confusionMatrix:
+            confusionMatrix[caMod] = {}
         for cl in cls:
-            if not cl in confusionMatrix[ca]:
-                confusionMatrix[ca][cl] = 0
-            confusionMatrix[ca][cl] += 1/float(len(v['categories'])*len(cls))
+            if not cl in confusionMatrix[caMod]:
+                confusionMatrix[caMod][cl] = 0
+            confusionMatrix[caMod][cl] += 1/float(len(v['categories'])*len(cls))
     p += 1
     if p % 5 == 0:
         printConfusion(confusionMatrix)
 
-with open("knn.out", 'w') as f:
+with open("knnCond.out", 'w') as f:
     output = ""
     output += "".ljust(7)
     for key2 in allCategories.values():
